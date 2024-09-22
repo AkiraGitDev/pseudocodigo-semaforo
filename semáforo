@@ -1,0 +1,67 @@
+// Definir pinos
+inteiro led_verde_veiculo = 2
+inteiro led_amarelo_veiculo = 3
+inteiro led_vermelho_veiculo = 4
+inteiro led_verde_pedestre = 5
+inteiro led_vermelho_pedestre = 6
+inteiro botao_pedestre = 7
+inteiro buzzer = 8
+inteiro vibrador = 9
+
+// Definir tempos em milissegundos
+inteiro tempo_verde_veiculo = 5000
+inteiro tempo_amarelo_veiculo = 2000
+inteiro tempo_vermelho_veiculo = 5000
+inteiro tempo_verde_pedestre = 7000
+
+início
+    // Configurar pinos como entrada e saída
+    configurar_saida(led_verde_veiculo)
+    configurar_saida(led_amarelo_veiculo)
+    configurar_saida(led_vermelho_veiculo)
+    configurar_saida(led_verde_pedestre)
+    configurar_saida(led_vermelho_pedestre)
+    configurar_entrada(botao_pedestre)
+    configurar_saida(buzzer)
+    configurar_saida(vibrador)
+    
+    // Estado inicial: veículos em verde, pedestres em vermelho
+    acender(led_verde_veiculo)
+    acender(led_vermelho_pedestre)
+
+    enquanto verdadeiro faça
+        // Verifica se o botão de pedestre foi pressionado
+        se (botao_pressionado(botao_pedestre)) então
+            // Aguarda o tempo do sinal verde para veículos
+            esperar(tempo_verde_veiculo)
+            
+            // Transição para vermelho para veículos
+            apagar(led_verde_veiculo)
+            acender(led_amarelo_veiculo)
+            esperar(tempo_amarelo_veiculo)
+            apagar(led_amarelo_veiculo)
+            acender(led_vermelho_veiculo)
+            
+            // Libera travessia para pedestres
+            apagar(led_vermelho_pedestre)
+            acender(led_verde_pedestre)
+            
+            // Sinalização inclusiva: ativa o som e vibração
+            acender(buzzer)
+            acender(vibrador)
+            esperar(tempo_verde_pedestre)
+            
+            // Termina travessia dos pedestres
+            apagar(led_verde_pedestre)
+            acender(led_vermelho_pedestre)
+            
+            // Retorna semáforo dos veículos para verde
+            apagar(led_vermelho_veiculo)
+            acender(led_verde_veiculo)
+            
+            // Desliga som e vibração
+            apagar(buzzer)
+            apagar(vibrador)
+        fimse
+    fimenquanto
+fim
